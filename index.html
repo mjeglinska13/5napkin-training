@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5Napkin Team Training</title>
+<style>
+  :root{
+    --ink:#22241f;
+    --ink-soft:#585a4f;
+    --paper:#f2ede1;
+    --paper-raised:#fbf9f3;
+    --line:#22241f26;
+    --accent:#b8710f;
+    --accent-ink:#3a2100;
+    --rush:#a3321f;
+    --good:#3f6b3f;
+    --shadow:0 1px 0 var(--line);
+    --display:'Bebas Neue', 'Arial Narrow', sans-serif;
+    --body:'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#ece6d6;
+      --ink-soft:#b7b09b;
+      --paper:#1b1c18;
+      --paper-raised:#232420;
+      --line:#ece6d626;
+      --accent:#e0a83d;
+      --accent-ink:#1b1300;
+      --rush:#e07354;
+      --good:#8fbf8a;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#ece6d6;
+    --ink-soft:#b7b09b;
+    --paper:#1b1c18;
+    --paper-raised:#232420;
+    --line:#ece6d626;
+    --accent:#e0a83d;
+    --accent-ink:#1b1300;
+    --rush:#e07354;
+    --good:#8fbf8a;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    padding-inline:16px;
+    padding-block:20px;
+    max-width:560px;
+    margin-inline:auto;
+    line-height:1.5;
+  }
+  h1,h2,h3{font-family:var(--display);letter-spacing:.02em;text-wrap:balance;margin:0;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  button{font-family:var(--body);}
+  .btn{
+    appearance:none;border:1px solid var(--ink);border-radius:3px;
+    background:var(--accent);color:var(--accent-ink);
+    font-weight:700;font-size:15px;padding:13px 18px;cursor:pointer;
+    width:100%;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .btn-ghost{
+    appearance:none;border:1px solid var(--line);border-radius:3px;background:transparent;
+    color:var(--ink);font-size:14px;padding:10px 14px;cursor:pointer;
+  }
+  input[type=email], input[type=text]{
+    width:100%;font-family:var(--mono);font-size:15px;
+    padding:13px 12px;border:1px solid var(--ink);border-radius:3px;
+    background:var(--paper-raised);color:var(--ink);
+  }
+  .card{
+    background:var(--paper-raised);border:1px solid var(--line);border-radius:4px;
+  }
+  [hidden]{display:none!important;}
+
+  /* ---- header / masthead ---- */
+  .masthead{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+    padding-bottom:14px;margin-bottom:18px;border-bottom:3px double var(--ink);
+  }
+  .masthead h1{font-size:30px;line-height:.9;}
+  .stamp{
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    border:1.5px solid var(--rush);color:var(--rush);border-radius:3px;padding:4px 7px;
+    transform:rotate(-3deg);white-space:nowrap;
+  }
+
+  /* ---- gate ---- */
+  #gate .card{padding:22px 18px;display:flex;flex-direction:column;gap:14px;}
+  #gate p{color:var(--ink-soft);font-size:14px;margin:0;}
+  #gate label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px;}
+  #gate-error{font-size:13px;color:var(--rush);font-weight:600;min-height:1.2em;}
+  #gate-error:empty{display:none;}
+
+  /* ---- library ---- */
+  .who-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:18px;
+  }
+  .who-bar button{background:none;border:none;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font-family:var(--mono);font-size:12px;padding:0;}
+  section.group{margin-bottom:26px;}
+  .group-head{
+    display:flex;align-items:baseline;gap:10px;margin-bottom:10px;
+  }
+  .group-head h2{font-size:19px;}
+  .group-head .count{font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+  .item-row{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    padding:13px 12px;margin-bottom:8px;cursor:pointer;
+    border:1px solid var(--line);border-radius:4px;background:var(--paper-raised);
+  }
+  .item-row:last-child{margin-bottom:0;}
+  .tag{
+    font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+    border:1px solid currentColor;border-radius:3px;padding:3px 6px;flex-shrink:0;
+  }
+  .tag.doc{color:var(--ink-soft);}
+  .tag.video{color:var(--accent);}
+  .tag.quiz{color:var(--rush);}
+  .item-title{flex:1;font-size:15px;font-weight:600;}
+  .item-meta{font-family:var(--mono);font-size:11px;color:var(--ink-soft);flex-shrink:0;}
+  .check{
+    width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--good);
+  }
+  .check.done{border-color:var(--good);background:var(--good);color:var(--paper);}
+
+  /* ---- detail ---- */
+  #detail-back{margin-bottom:16px;}
+  #detail .eyebrow{margin-bottom:4px;}
+  #detail h2{font-size:24px;margin-bottom:14px;}
+  .doc-body{font-size:15px;}
+  .doc-body h3{font-family:var(--body);font-size:15px;font-weight:700;margin-top:18px;margin-bottom:6px;}
+  .doc-body ul, .doc-body ol{padding-left:20px;margin:8px 0;}
+  .doc-body li{margin-bottom:5px;}
+  .doc-body p{margin:0 0 10px;}
+  .doc-body img{max-width:100%;height:auto;border-radius:4px;margin-bottom:12px;display:block;}
+  .doc-body table{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:14px;}
+  .doc-body th, .doc-body td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);}
+  .doc-body th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);}
+  .doc-body td:nth-child(2){font-family:var(--mono);white-space:nowrap;}
+  .video-slot{
+    aspect-ratio:16/9;max-width:100%;border-radius:4px;border:1.5px dashed var(--line);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    background:repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 12px);
+    color:var(--ink-soft);text-align:center;padding:18px;margin-bottom:14px;
+  }
+  .video-slot .eyebrow{color:var(--rush);}
+
+  /* ---- quiz ---- */
+  .q-block{margin-bottom:20px;}
+  .q-block p.q-text{font-weight:600;margin:0 0 10px;}
+  .opt{
+    display:flex;align-items:center;gap:10px;padding:11px 12px;margin-bottom:7px;
+    border:1px solid var(--line);border-radius:4px;cursor:pointer;font-size:14px;background:var(--paper-raised);
+  }
+  .opt input{accent-color:var(--accent);}
+  .opt.correct{border-color:var(--good);}
+  .opt.wrong{border-color:var(--rush);}
+  #quiz-result{margin-top:16px;padding:16px;border-radius:4px;border:1px solid var(--line);}
+  #quiz-result.pass{border-color:var(--good);}
+  #quiz-result.fail{border-color:var(--rush);}
+  #quiz-result h3{font-family:var(--display);font-size:22px;margin-bottom:4px;}
+
+  /* ---- install note ---- */
+  .install{margin-top:28px;padding:16px;font-size:13px;}
+  .install summary{cursor:pointer;font-weight:600;font-size:14px;}
+  .install ol{padding-left:18px;margin:10px 0 0;}
+  .install li{margin-bottom:4px;}
+
+  /* ---- admin ---- */
+  .admin{padding:14px 16px;margin-bottom:18px;}
+  .admin summary{cursor:pointer;font-weight:600;font-size:14px;}
+  .roster-row{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:8px 0;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:13px;
+  }
+  .roster-row:last-child{border-bottom:none;}
+  .roster-row .roster-actions{display:flex;gap:6px;flex-shrink:0;}
+  .roster-row button{
+    appearance:none;border:1px solid var(--line);border-radius:3px;background:transparent;
+    color:var(--rush);font-size:11px;padding:4px 8px;cursor:pointer;font-family:var(--mono);
+  }
+  .roster-row button.edit-btn{color:var(--ink);}
+  .admin-add-row{display:flex;gap:8px;margin-top:10px;}
+  .admin-add-row input{flex:1;}
+  .admin-add-row button{width:auto;white-space:nowrap;padding:10px 14px;font-size:13px;}
+  #admin-status{font-size:12px;margin-top:10px;min-height:1.2em;color:var(--ink-soft);}
+  #admin-status.err{color:var(--rush);font-weight:600;}
+
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+</head>
+<body>
+<header class="masthead">
+  <h1>5Napkin<br>Training</h1>
+  <span class="stamp">Staff Only</span>
+</header>
+
+<main>
+  <!-- GATE -->
+  <div id="gate">
+    <div class="card">
+      <div>
+        <p class="eyebrow" style="margin-bottom:6px;">Team Access</p>
+        <p>Enter the email your manager has on file to open the training library.</p>
+      </div>
+      <div>
+        <label for="email-input">Work or team email</label>
+        <input id="email-input" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <button class="btn" id="gate-submit">Continue</button>
+      <p id="gate-error" role="alert"></p>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div id="library" hidden>
+    <div class="who-bar">
+      <span id="who-label"></span>
+      <button id="switch-user">switch account</button>
+    </div>
+
+    <details class="card admin" id="admin-panel" hidden>
+      <summary>Manage Team Access</summary>
+      <div>
+        <p class="eyebrow" style="margin:10px 0 8px;">Emails allowed to open this app</p>
+        <div id="roster-list"></div>
+        <div class="admin-add-row">
+          <input type="email" id="admin-email-input" placeholder="new.teammate@email.com">
+          <button class="btn" id="admin-add-btn">Add</button>
+        </div>
+        <p id="admin-status"></p>
+      </div>
+    </details>
+
+    <details class="card admin" id="content-panel" hidden>
+      <summary>Manage Content</summary>
+      <div>
+        <p class="eyebrow" style="margin:10px 0 8px;">Add a document — a recipe, ingredient list, checklist, or house rule</p>
+
+        <label for="content-category" style="display:block;font-size:12px;color:var(--ink-soft);margin-bottom:4px;">Category</label>
+        <select id="content-category" style="width:100%;font-family:var(--body);font-size:14px;padding:11px;border:1px solid var(--ink);border-radius:3px;background:var(--paper-raised);color:var(--ink);margin-bottom:8px;"></select>
+        <input type="text" id="content-new-category" placeholder="New category name…" hidden style="margin-bottom:8px;">
+
+        <label for="content-title" style="display:block;font-size:12px;color:var(--ink-soft);margin-bottom:4px;">Title</label>
+        <input type="text" id="content-title" placeholder="e.g. Burger Blend Recipe" style="margin-bottom:8px;">
+
+        <label for="content-body" style="display:block;font-size:12px;color:var(--ink-soft);margin-bottom:4px;">Content</label>
+        <textarea id="content-body" rows="8" placeholder="## Ingredients&#10;- 80/20 beef blend&#10;- Salt, pepper&#10;&#10;## Steps&#10;1. Portion 5oz patties&#10;2. Season both sides&#10;&#10;Write plain text, or use ## for headings and - for bullet lists." style="width:100%;font-family:var(--body);font-size:14px;padding:11px;border:1px solid var(--ink);border-radius:3px;background:var(--paper-raised);color:var(--ink);resize:vertical;"></textarea>
+
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="btn" id="content-add-btn" style="flex:1;">Add to Library</button>
+          <button class="btn-ghost" id="content-cancel-btn" type="button" hidden style="width:auto;white-space:nowrap;">Cancel</button>
+        </div>
+        <p id="content-status"></p>
+
+        <p class="eyebrow" style="margin:18px 0 8px;border-top:1px solid var(--line);padding-top:14px;">Current items</p>
+        <div id="content-list"></div>
+      </div>
+    </details>
+
+    <div id="groups"></div>
+
+    <details class="install card">
+      <summary>Add this to your phone's home screen</summary>
+      <div>
+        <p style="margin:8px 0 0;"><strong>iPhone (Safari):</strong></p>
+        <ol><li>Tap the Share icon at the bottom of the screen</li><li>Scroll down and tap "Add to Home Screen"</li><li>Tap "Add"</li></ol>
+        <p style="margin:14px 0 0;"><strong>Android (Chrome):</strong></p>
+        <ol><li>Tap the ⋮ menu in the top right</li><li>Tap "Add to Home screen"</li><li>Tap "Add"</li></ol>
+      </div>
+    </details>
+  </div>
+
+  <!-- DETAIL -->
+  <div id="detail" hidden>
+    <button class="btn-ghost" id="detail-back">← Back to library</button>
+    <div id="detail-body"></div>
+  </div>
+</main>
+
+<footer>5Napkin Burger &middot; Upper West Side &middot; access managed by your manager</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // Captured before anything on the page moves — this is the page exactly as it
+  // loaded, at rest. It's what "Manage Team Access" edits and republishes.
+  var __ORIG_DOC__ = document.documentElement.outerHTML;
+
+  var DATA = {
+    restaurant: "5Napkin Burger — UWS",
+    // Emails allowed in. Case-insensitive, trimmed. Edited from the
+    // "Manage Team Access" panel (visible to you as the owner), or by
+    // asking Claude to add/remove someone and republish.
+    roster: /*ROSTER_START*/[
+      "m.jeglinska@chefdriven.com"
+    ]/*ROSTER_END*/,
+    // Training items by category. Edited from the "Manage Content" panel
+    // (owner-only), or by asking Claude to restructure something bigger.
+    groups: /*GROUPS_START*/[
+      {
+        id: "start",
+        name: "Getting Started",
+        items: [
+          {
+            id: "welcome",
+            type: "doc",
+            title: "Welcome & Dress Code",
+            minutes: 3,
+            source:
+              "Welcome to the team. This library is your home for everything you need to work a shift with confidence — checklists, house rules, and short refreshers. New items get added here, so check back.\n" +
+              "\n" +
+              "## Dress code\n" +
+              "\n" +
+              "- Black non-slip shoes, closed toe, every shift\n" +
+              "- 5Napkin shirt or apron as assigned by your manager\n" +
+              "- Hair tied back or under a hat if it touches your collar\n" +
+              "- No strong perfume or cologne — we're next to the food\n" +
+              "\n" +
+              "## Before you clock in\n" +
+              "\n" +
+              "- Wash hands, even if you already did at home\n" +
+              "- Check the shift board for your section or station\n" +
+              "- Grab a clean apron/rag if yours from last shift is in the laundry bin",
+            html:
+              "<p>Welcome to the team. This library is your home for everything you need to work a shift with confidence — checklists, house rules, and short refreshers. New items get added here, so check back.</p>" +
+              "<h3>Dress code</h3>" +
+              "<ul>" +
+              "<li>Black non-slip shoes, closed toe, every shift</li>" +
+              "<li>5Napkin shirt or apron as assigned by your manager</li>" +
+              "<li>Hair tied back or under a hat if it touches your collar</li>" +
+              "<li>No strong perfume or cologne — we're next to the food</li>" +
+              "</ul>" +
+              "<h3>Before you clock in</h3>" +
+              "<ul>" +
+              "<li>Wash hands, even if you already did at home</li>" +
+              "<li>Check the shift board for your section or station</li>" +
+              "<li>Grab a clean apron/rag if yours from last shift is in the laundry bin</li>" +
+              "</ul>"
+          },
+          {
+            id: "plating-video",
+            type: "video",
+            title: "How We Plate the 5Napkin Burger",
+            minutes: 4,
+            placeholder: true
+          }
+        ]
+      },
+      {
+        id: "safety",
+        name: "Food Safety & Allergens",
+        items: [
+          {
+            id: "allergen-guide",
+            type: "doc",
+            title: "Allergen Guide",
+            minutes: 5,
+            source:
+              "If a guest mentions an allergy, always tell the kitchen directly — don't just write it on the ticket and assume it was seen. When in doubt, ask a manager before the plate goes out.\n" +
+              "\n" +
+              "## Common allergens on our menu\n" +
+              "\n" +
+              "- **Gluten** – all buns, onion straws, most sauces thickened with flour\n" +
+              "- **Dairy** – cheese, milkshakes, garlic aioli, buttered buns\n" +
+              "- **Egg** – aioli, some dressings\n" +
+              "- **Soy** – burger blend, veggie patty, teriyaki sauce\n" +
+              "- **Tree nuts / peanuts** – seasonal salads, some desserts — always check the current menu insert\n" +
+              "- **Sesame** – some buns and buns' seed topping\n" +
+              "\n" +
+              "## Cross-contact basics\n" +
+              "\n" +
+              "1. Use a clean pan, clean tongs, and a clean plate for any allergy order\n" +
+              "2. Never scrape the shared flat-top for an allergy order — clear and wipe a section first\n" +
+              "3. Fryer oil is shared — gluten-free items cannot go in the regular fryer\n" +
+              "4. Flag the ticket and hand the plate off verbally: \"this one's the allergy order\"",
+            html:
+              "<p>If a guest mentions an allergy, always tell the kitchen directly — don't just write it on the ticket and assume it was seen. When in doubt, ask a manager before the plate goes out.</p>" +
+              "<h3>Common allergens on our menu</h3>" +
+              "<ul>" +
+              "<li><strong>Gluten</strong> – all buns, onion straws, most sauces thickened with flour</li>" +
+              "<li><strong>Dairy</strong> – cheese, milkshakes, garlic aioli, buttered buns</li>" +
+              "<li><strong>Egg</strong> – aioli, some dressings</li>" +
+              "<li><strong>Soy</strong> – burger blend, veggie patty, teriyaki sauce</li>" +
+              "<li><strong>Tree nuts / peanuts</strong> – seasonal salads, some desserts — always check the current menu insert</li>" +
+              "<li><strong>Sesame</strong> – some buns and buns' seed topping</li>" +
+              "</ul>" +
+              "<h3>Cross-contact basics</h3>" +
+              "<ol>" +
+              "<li>Use a clean pan, clean tongs, and a clean plate for any allergy order</li>" +
+              "<li>Never scrape the shared flat-top for an allergy order — clear and wipe a section first</li>" +
+              "<li>Fryer oil is shared — gluten-free items cannot go in the regular fryer</li>" +
+              "<li>Flag the ticket and hand the plate off verbally: \"this one's the allergy order\"</li>" +
+              "</ol>"
+          },
+          {
+            id: "burger-temp-guide",
+            type: "doc",
+            title: "Burger Temperature Guide",
+            minutes: 2,
+            html:
+              "<img src=\"images/burger-temp.jpg\" alt=\"Burger doneness reference chart, from rare to well done, with temperatures\">" +
+              "<p>Use a probe thermometer to check the center of the patty — don't guess by color alone, especially for grey/brown ranges.</p>" +
+              "<table>" +
+              "<thead><tr><th>Doneness</th><th>Temp</th><th>What it looks like</th></tr></thead>" +
+              "<tbody>" +
+              "<tr><td>Rare</td><td>120–125°</td><td>Red throughout, cool red center</td></tr>" +
+              "<tr><td>Medium Rare</td><td>130–135°</td><td>Red throughout, warm red center</td></tr>" +
+              "<tr><td>Medium</td><td>140–145°</td><td>Pink throughout, touch of red in center</td></tr>" +
+              "<tr><td>Medium Well</td><td>150–155°</td><td>Grey/brown with a touch of pink in the center</td></tr>" +
+              "<tr><td>Well Done</td><td>160–165°</td><td>Grey/brown throughout, no pink</td></tr>" +
+              "</tbody>" +
+              "</table>" +
+              "<p>If a guest doesn't specify, the kitchen defaults to medium. Always confirm doneness with the guest at the table before it's rung in — it's much easier to fix on the ticket than to remake the plate.</p>"
+          },
+          {
+            id: "food-safety-quiz",
+            type: "quiz",
+            title: "Food Safety Basics",
+            minutes: 3,
+            pass: 0.75,
+            questions: [
+              {
+                q: "A guest says they have a peanut allergy. What's the first thing you do?",
+                options: [
+                  "Write it on the ticket and move on",
+                  "Tell the kitchen directly, then also flag the ticket",
+                  "Assume the kitchen will notice it on the ticket"
+                ],
+                correct: 1
+              },
+              {
+                q: "Can gluten-free fries go in the same fryer as regular breaded items?",
+                options: ["Yes, it's fine", "No — the oil is shared and that's cross-contact", "Only if fried quickly"],
+                correct: 1
+              },
+              {
+                q: "Which of these is NOT a common source of dairy on our menu?",
+                options: ["Garlic aioli", "Milkshakes", "Veggie patty"],
+                correct: 2
+              },
+              {
+                q: "Best practice for an allergy order on the flat-top?",
+                options: [
+                  "Cook it in the next open space without clearing anything",
+                  "Clear and wipe a section first, use clean tools",
+                  "Ask the guest to order something off the flat-top instead"
+                ],
+                correct: 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "service",
+        name: "Service & POS",
+        items: [
+          {
+            id: "opening-checklist",
+            type: "doc",
+            title: "Opening Checklist",
+            minutes: 4,
+            source:
+              "Run through this in order. Initial the paper checklist at the host stand once you're done — this digital copy is for reference.\n" +
+              "\n" +
+              "## Front of house\n" +
+              "\n" +
+              "1. Unlock doors, disarm alarm, turn on all dining room lights\n" +
+              "2. POS terminals on, log in, check printer paper\n" +
+              "3. Wipe down all tables, straighten chairs\n" +
+              "4. Stock napkins (yes, more than 5), menus, high chairs wiped down\n" +
+              "5. Check reservation book / app for large parties today\n" +
+              "\n" +
+              "## Bar\n" +
+              "\n" +
+              "1. Ice bins filled\n" +
+              "2. Draft lines checked, first pour tested and tossed\n" +
+              "3. Garnish tray restocked and dated",
+            html:
+              "<p>Run through this in order. Initial the paper checklist at the host stand once you're done — this digital copy is for reference.</p>" +
+              "<h3>Front of house</h3>" +
+              "<ol>" +
+              "<li>Unlock doors, disarm alarm, turn on all dining room lights</li>" +
+              "<li>POS terminals on, log in, check printer paper</li>" +
+              "<li>Wipe down all tables, straighten chairs</li>" +
+              "<li>Stock napkins (yes, more than 5), menus, high chairs wiped down</li>" +
+              "<li>Check reservation book / app for large parties today</li>" +
+              "</ol>" +
+              "<h3>Bar</h3>" +
+              "<ol>" +
+              "<li>Ice bins filled</li>" +
+              "<li>Draft lines checked, first pour tested and tossed</li>" +
+              "<li>Garnish tray restocked and dated</li>" +
+              "</ol>"
+          },
+          {
+            id: "pos-video",
+            type: "video",
+            title: "POS Walkthrough: Ringing In a Table",
+            minutes: 6,
+            placeholder: true
+          }
+        ]
+      },
+      {
+        id: "beverages",
+        name: "Beverage Guides",
+        items: [
+          {
+            id: "beer-guide",
+            type: "doc",
+            title: "Draft Beer Reference Guide",
+            minutes: 6,
+            source:
+              "Use these pairings when a guest asks \"what goes with this?\" — confident recommendations upsell better than \"I'm not sure, let me check.\"\n" +
+              "\n" +
+              "## Crisp & refreshing — lagers & pilsners\n" +
+              "\n" +
+              "- **5 Napkin Gold Lager** (Michigan) — 4.4% · $8. Clean, bright, smooth, gentle malt sweetness. *Pairs with:* Classic Cheese Burger, French Fries, Guacamole & Chips.\n" +
+              "- **Coney Island Mermaid Pilsner** (New York) — 5.2% · $9. Light-bodied, mild hop aroma, dry clean bite. *Pairs with:* Crispy Fish Sandwich, Tavern Onion Ring Tower, Tuna Poke Nachos.\n" +
+              "- **Five Boroughs Czech Pilsner** (New York) — 5.0% · $9. Crisp, floral and earthy Saaz hops, light bready malt. *Pairs with:* Spinach & Artichoke Dip, Turkey Burger.\n" +
+              "- **Stella Artois Pale Lager** (Belgium) — 5.0% · $9. Hoppy aroma, balanced malt sweetness, crisp finish. *Pairs with:* Bacon-Cheddar Burger, Soft Pretzels.\n" +
+              "\n" +
+              "## Hops, IPAs & fruit expressions\n" +
+              "\n" +
+              "- **Captain Lawrence Hop Commander** (New York) — 6.5% · $9. Bold West Coast IPA, citrus and pine, assertive bitterness. *Pairs with:* The Original 10oz. 5 Napkin Burger®, Bistro Steak.\n" +
+              "- **Founders Mortal Bloom** (Michigan) — 6.2% · $9. Juicy, tropical hazy IPA — passionfruit, pineapple, citrus, creamy mouthfeel. *Pairs with:* Avocado-Ranch Burger, Grilled Chipotle Chicken Sandwich.\n" +
+              "- **Downeast Blackberry Cider** (Massachusetts) — 5.1% · $9. Unfiltered, tart blackberry, crisp and fruit-forward. *Pairs with:* Buffalo Wings, Buffalo Chicken Sandwich.\n" +
+              "\n" +
+              "## Wheat ales & non-alcoholic\n" +
+              "\n" +
+              "- **Allagash White** (Maine) — 5.2% · $9. Belgian witbier, coriander and Curaçao orange peel, lightly cloudy. *Pairs with:* Truffle Burger, Cavatappi Mac & Cheese.\n" +
+              "- **Athletic Brewing Run Wild IPA** (Connecticut, non-alc) — under 0.5% · $9. Five Northwest hops, authentic bitterness, negligible alcohol. *Pairs with:* 5N Veggie Burger, Kale Salad.",
+            html:
+              "<p>Use these pairings when a guest asks \"what goes with this?\" — confident recommendations upsell better than \"I'm not sure, let me check.\"</p>" +
+              "<h3>Crisp & refreshing — lagers & pilsners</h3>" +
+              "<ul>" +
+              "<li><strong>5 Napkin Gold Lager</strong> (Michigan) — 4.4% · $8. Clean, bright, smooth, gentle malt sweetness. <em>Pairs with:</em> Classic Cheese Burger, French Fries, Guacamole & Chips.</li>" +
+              "<li><strong>Coney Island Mermaid Pilsner</strong> (New York) — 5.2% · $9. Light-bodied, mild hop aroma, dry clean bite. <em>Pairs with:</em> Crispy Fish Sandwich, Tavern Onion Ring Tower, Tuna Poke Nachos.</li>" +
+              "<li><strong>Five Boroughs Czech Pilsner</strong> (New York) — 5.0% · $9. Crisp, floral and earthy Saaz hops, light bready malt. <em>Pairs with:</em> Spinach & Artichoke Dip, Turkey Burger.</li>" +
+              "<li><strong>Stella Artois Pale Lager</strong> (Belgium) — 5.0% · $9. Hoppy aroma, balanced malt sweetness, crisp finish. <em>Pairs with:</em> Bacon-Cheddar Burger, Soft Pretzels.</li>" +
+              "</ul>" +
+              "<h3>Hops, IPAs & fruit expressions</h3>" +
+              "<ul>" +
+              "<li><strong>Captain Lawrence Hop Commander</strong> (New York) — 6.5% · $9. Bold West Coast IPA, citrus and pine, assertive bitterness. <em>Pairs with:</em> The Original 10oz. 5 Napkin Burger®, Bistro Steak.</li>" +
+              "<li><strong>Founders Mortal Bloom</strong> (Michigan) — 6.2% · $9. Juicy, tropical hazy IPA — passionfruit, pineapple, citrus, creamy mouthfeel. <em>Pairs with:</em> Avocado-Ranch Burger, Grilled Chipotle Chicken Sandwich.</li>" +
+              "<li><strong>Downeast Blackberry Cider</strong> (Massachusetts) — 5.1% · $9. Unfiltered, tart blackberry, crisp and fruit-forward. <em>Pairs with:</em> Buffalo Wings, Buffalo Chicken Sandwich.</li>" +
+              "</ul>" +
+              "<h3>Wheat ales & non-alcoholic</h3>" +
+              "<ul>" +
+              "<li><strong>Allagash White</strong> (Maine) — 5.2% · $9. Belgian witbier, coriander and Curaçao orange peel, lightly cloudy. <em>Pairs with:</em> Truffle Burger, Cavatappi Mac & Cheese.</li>" +
+              "<li><strong>Athletic Brewing Run Wild IPA</strong> (Connecticut, non-alc) — &lt;0.5% · $9. Five Northwest hops, authentic bitterness, negligible alcohol. <em>Pairs with:</em> 5N Veggie Burger, Kale Salad.</li>" +
+              "</ul>"
+          },
+          {
+            id: "wine-guide",
+            type: "doc",
+            title: "Wine Reference Guide",
+            minutes: 6,
+            source:
+              "## Bubbly\n" +
+              "\n" +
+              "- **Prosecco**, Caposaldo (Italy) — 11.5% · $14 (187ml). Light, fizzy, green apple, pear, bright citrus. *Pairs with:* Tavern Onion Ring Tower, Spinach & Artichoke Dip.\n" +
+              "\n" +
+              "## Rosé\n" +
+              "\n" +
+              "- **Rosé**, Maison Saleya (France) — 13.0% · $14 / $52. Bone-dry, wild strawberry, raspberry, stony mineral finish. *Pairs with:* Tuna Poke Nachos, Crispy Fish Sandwich, 5N Veggie Burger.\n" +
+              "\n" +
+              "## White\n" +
+              "\n" +
+              "- **Sauvignon Blanc**, The Infamous Goose (New Zealand) — 13.0% · $15 / $56. Lively, dry, fresh lime and grapefruit. *Pairs with:* Avocado-Ranch Burger, Guacamole & Chips.\n" +
+              "- **Pinot Grigio**, Bollini (Italy) — 12.0% · $14 / $52. Crisp alpine acidity, acacia flower, pear, citrus. *Pairs with:* Grilled Chipotle Chicken Sandwich, Kale Salad.\n" +
+              "- **Chardonnay**, Hess Shirtail Ranches (California) — 13.5% · $15 / $56. Balanced fruit, smooth acidity. *Pairs with:* Buffalo Wings, Buffalo Chicken Sandwich, Cavatappi Mac & Cheese.\n" +
+              "\n" +
+              "## Red\n" +
+              "\n" +
+              "- **Pinot Noir**, The Seeker (France) — 12.5% · $15 / $56. Wild berries, pomegranate, gentle tannins. *Pairs with:* Truffle Burger, Turkey Burger.\n" +
+              "- **Malbec**, Alta Vista \"Vive\" (Argentina) — 13.5% · $13 / $48. Red fruit, plum, vanilla, hint of coffee, round tannins. *Pairs with:* Bacon-Cheddar Burger, Classic Cheese Burger.\n" +
+              "- **Chianti**, Caposaldo (Italy) — 12.5% · $13 / $48. Bright red cherry, light cedar, elegant finish. *Pairs with:* Italian Spiced Turkey Burger.\n" +
+              "- **Cabernet Sauvignon**, Montes (Chile) — 14.0% · $14 / $52. Caramel, cinnamon, mint, firm tannins, full body. *Pairs with:* The Original 10oz. 5 Napkin Burger®, Bistro Steak.\n" +
+              "\n" +
+              "## Fast upselling tips\n" +
+              "\n" +
+              "- Selling the Original 5N Burger? Recommend the Montes Cabernet: \"The robust tannins cut straight through our signature 10oz patty, aged gruyere, and caramelized onions.\"\n" +
+              "- Selling the Truffle Burger? Point them to The Seeker Pinot Noir: \"The delicate berry fruit and light tannins let the earthy truffle jack and savory mushrooms take center stage.\"\n" +
+              "- Selling spicy wings or Buffalo Chicken? Recommend the Hess Chardonnay — the oak and fruit body cools the hot sauce and handles the blue cheese.\n" +
+              "- Solo diners / quick bites: the Caposaldo Prosecco comes as an individual 187ml split — a great easy starter toast with Onion Rings or Artichoke Dip.",
+            html:
+              "<h3>Bubbly</h3>" +
+              "<ul>" +
+              "<li><strong>Prosecco</strong>, Caposaldo (Italy) — 11.5% · $14 (187ml). Light, fizzy, green apple, pear, bright citrus. <em>Pairs with:</em> Tavern Onion Ring Tower, Spinach & Artichoke Dip.</li>" +
+              "</ul>" +
+              "<h3>Rosé</h3>" +
+              "<ul>" +
+              "<li><strong>Rosé</strong>, Maison Saleya (France) — 13.0% · $14 / $52. Bone-dry, wild strawberry, raspberry, stony mineral finish. <em>Pairs with:</em> Tuna Poke Nachos, Crispy Fish Sandwich, 5N Veggie Burger.</li>" +
+              "</ul>" +
+              "<h3>White</h3>" +
+              "<ul>" +
+              "<li><strong>Sauvignon Blanc</strong>, The Infamous Goose (New Zealand) — 13.0% · $15 / $56. Lively, dry, fresh lime and grapefruit. <em>Pairs with:</em> Avocado-Ranch Burger, Guacamole & Chips.</li>" +
+              "<li><strong>Pinot Grigio</strong>, Bollini (Italy) — 12.0% · $14 / $52. Crisp alpine acidity, acacia flower, pear, citrus. <em>Pairs with:</em> Grilled Chipotle Chicken Sandwich, Kale Salad.</li>" +
+              "<li><strong>Chardonnay</strong>, Hess Shirtail Ranches (California) — 13.5% · $15 / $56. Balanced fruit, smooth acidity. <em>Pairs with:</em> Buffalo Wings, Buffalo Chicken Sandwich, Cavatappi Mac & Cheese.</li>" +
+              "</ul>" +
+              "<h3>Red</h3>" +
+              "<ul>" +
+              "<li><strong>Pinot Noir</strong>, The Seeker (France) — 12.5% · $15 / $56. Wild berries, pomegranate, gentle tannins. <em>Pairs with:</em> Truffle Burger, Turkey Burger.</li>" +
+              "<li><strong>Malbec</strong>, Alta Vista \"Vive\" (Argentina) — 13.5% · $13 / $48. Red fruit, plum, vanilla, hint of coffee, round tannins. <em>Pairs with:</em> Bacon-Cheddar Burger, Classic Cheese Burger.</li>" +
+              "<li><strong>Chianti</strong>, Caposaldo (Italy) — 12.5% · $13 / $48. Bright red cherry, light cedar, elegant finish. <em>Pairs with:</em> Italian Spiced Turkey Burger.</li>" +
+              "<li><strong>Cabernet Sauvignon</strong>, Montes (Chile) — 14.0% · $14 / $52. Caramel, cinnamon, mint, firm tannins, full body. <em>Pairs with:</em> The Original 10oz. 5 Napkin Burger®, Bistro Steak.</li>" +
+              "</ul>" +
+              "<h3>Fast upselling tips</h3>" +
+              "<ul>" +
+              "<li>Selling the Original 5N Burger? Recommend the Montes Cabernet: \"The robust tannins cut straight through our signature 10oz patty, aged gruyere, and caramelized onions.\"</li>" +
+              "<li>Selling the Truffle Burger? Point them to The Seeker Pinot Noir: \"The delicate berry fruit and light tannins let the earthy truffle jack and savory mushrooms take center stage.\"</li>" +
+              "<li>Selling spicy wings or Buffalo Chicken? Recommend the Hess Chardonnay — the oak and fruit body cools the hot sauce and handles the blue cheese.</li>" +
+              "<li>Solo diners / quick bites: the Caposaldo Prosecco comes as an individual 187ml split — a great easy starter toast with Onion Rings or Artichoke Dip.</li>" +
+              "</ul>"
+          }
+        ]
+      }
+    ]/*GROUPS_END*/
+  };
+
+  var state = {
+    email: null,
+    view: "gate",
+    itemId: null,
+    completed: {}
+  };
+
+  function safeGet(key){ try { return localStorage.getItem(key); } catch(e){ return null; } }
+  function safeSet(key, val){ try { localStorage.setItem(key, val); } catch(e){} }
+  function safeRemove(key){ try { localStorage.removeItem(key); } catch(e){} }
+
+  function loadCompleted(email){
+    var raw = safeGet("training_done_" + email.toLowerCase());
+    try { return raw ? JSON.parse(raw) : {}; } catch(e){ return {}; }
+  }
+  function saveCompleted(email, done){
+    safeSet("training_done_" + email.toLowerCase(), JSON.stringify(done));
+  }
+
+  function findItem(id){
+    for (var g = 0; g < DATA.groups.length; g++){
+      for (var i = 0; i < DATA.groups[g].items.length; i++){
+        if (DATA.groups[g].items[i].id === id) return DATA.groups[g].items[i];
+      }
+    }
+    return null;
+  }
+
+  function isAllowed(email){
+    var e = email.trim().toLowerCase();
+    return DATA.roster.some(function(r){ return r.trim().toLowerCase() === e; });
+  }
+
+  var $gate = document.getElementById("gate");
+  var $library = document.getElementById("library");
+  var $detail = document.getElementById("detail");
+  var $emailInput = document.getElementById("email-input");
+  var $gateError = document.getElementById("gate-error");
+  var $whoLabel = document.getElementById("who-label");
+  var $groups = document.getElementById("groups");
+  var $detailBody = document.getElementById("detail-body");
+
+  function render(){
+    $gate.hidden = state.view !== "gate";
+    $library.hidden = state.view !== "library";
+    $detail.hidden = state.view !== "detail";
+
+    if (state.view === "library"){
+      $whoLabel.textContent = state.email;
+      renderGroups();
+    } else if (state.view === "detail"){
+      renderDetail();
+    }
+  }
+
+  function renderGroups(){
+    $groups.innerHTML = "";
+    DATA.groups.forEach(function(group){
+      var section = document.createElement("section");
+      section.className = "group";
+
+      var head = document.createElement("div");
+      head.className = "group-head";
+      var h2 = document.createElement("h2");
+      h2.textContent = group.name;
+      var doneCount = group.items.filter(function(it){ return state.completed[it.id]; }).length;
+      var count = document.createElement("span");
+      count.className = "count";
+      count.textContent = doneCount + " / " + group.items.length + " done";
+      head.appendChild(h2);
+      head.appendChild(count);
+      section.appendChild(head);
+
+      group.items.forEach(function(item){
+        var row = document.createElement("button");
+        row.type = "button";
+        row.className = "item-row";
+        row.setAttribute("aria-label", item.title);
+
+        var tag = document.createElement("span");
+        tag.className = "tag " + item.type;
+        tag.textContent = item.type === "doc" ? "DOC" : item.type === "video" ? "VIDEO" : "QUIZ";
+
+        var title = document.createElement("span");
+        title.className = "item-title";
+        title.textContent = item.title;
+
+        var meta = document.createElement("span");
+        meta.className = "item-meta";
+        meta.textContent = item.minutes + " min";
+
+        var check = document.createElement("span");
+        check.className = "check" + (state.completed[item.id] ? " done" : "");
+        check.textContent = state.completed[item.id] ? "✓" : "";
+
+        row.appendChild(tag);
+        row.appendChild(title);
+        row.appendChild(meta);
+        row.appendChild(check);
+
+        row.addEventListener("click", function(){
+          state.view = "detail";
+          state.itemId = item.id;
+          render();
+          window.scrollTo(0,0);
+        });
+
+        section.appendChild(row);
+      });
+
+      $groups.appendChild(section);
+    });
+  }
+
+  function markDone(id){
+    state.completed[id] = true;
+    saveCompleted(state.email, state.completed);
+  }
+
+  function renderDetail(){
+    var item = findItem(state.itemId);
+    if (!item){ state.view = "library"; render(); return; }
+    $detailBody.innerHTML = "";
+
+    var eyebrow = document.createElement("p");
+    eyebrow.className = "eyebrow";
+    eyebrow.textContent = (item.type === "doc" ? "Document" : item.type === "video" ? "Video" : "Quiz") + " · " + item.minutes + " min";
+    var h2 = document.createElement("h2");
+    h2.textContent = item.title;
+    $detailBody.appendChild(eyebrow);
+    $detailBody.appendChild(h2);
+
+    if (item.type === "doc"){
+      var body = document.createElement("div");
+      body.className = "doc-body";
+      body.innerHTML = item.html;
+      $detailBody.appendChild(body);
+      var btn = document.createElement("button");
+      btn.className = "btn";
+      btn.style.marginTop = "14px";
+      btn.textContent = state.completed[item.id] ? "✓ Marked as read" : "Mark as read";
+      btn.disabled = !!state.completed[item.id];
+      btn.addEventListener("click", function(){
+        markDone(item.id);
+        btn.textContent = "✓ Marked as read";
+        btn.disabled = true;
+      });
+      $detailBody.appendChild(btn);
+    }
+
+    if (item.type === "video"){
+      var slot = document.createElement("div");
+      slot.className = "video-slot";
+      slot.innerHTML = '<span class="eyebrow">Sample slot — add your video</span><span>This is a placeholder. Send a video link or file and it’ll be embedded here.</span>';
+      $detailBody.appendChild(slot);
+      var vbtn = document.createElement("button");
+      vbtn.className = "btn";
+      vbtn.textContent = state.completed[item.id] ? "✓ Marked as watched" : "Mark as watched";
+      vbtn.disabled = !!state.completed[item.id];
+      vbtn.addEventListener("click", function(){
+        markDone(item.id);
+        vbtn.textContent = "✓ Marked as watched";
+        vbtn.disabled = true;
+      });
+      $detailBody.appendChild(vbtn);
+    }
+
+    if (item.type === "quiz"){
+      renderQuiz(item);
+    }
+  }
+
+  function renderQuiz(item){
+    var form = document.createElement("form");
+    form.id = "quiz-form";
+
+    item.questions.forEach(function(q, qi){
+      var block = document.createElement("div");
+      block.className = "q-block";
+      var p = document.createElement("p");
+      p.className = "q-text";
+      p.textContent = (qi + 1) + ". " + q.q;
+      block.appendChild(p);
+
+      q.options.forEach(function(opt, oi){
+        var label = document.createElement("label");
+        label.className = "opt";
+        var radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "q" + qi;
+        radio.value = oi;
+        radio.id = item.id + "-q" + qi + "-o" + oi;
+        label.setAttribute("for", radio.id);
+        var span = document.createElement("span");
+        span.textContent = opt;
+        label.appendChild(radio);
+        label.appendChild(span);
+        block.appendChild(label);
+      });
+
+      form.appendChild(block);
+    });
+
+    var submit = document.createElement("button");
+    submit.type = "submit";
+    submit.className = "btn";
+    submit.textContent = "Submit answers";
+    form.appendChild(submit);
+
+    var result = document.createElement("div");
+    result.id = "quiz-result";
+    result.hidden = true;
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var correctCount = 0;
+      var blocks = form.querySelectorAll(".q-block");
+      item.questions.forEach(function(q, qi){
+        var picked = form.querySelector('input[name="q' + qi + '"]:checked');
+        var pickedVal = picked ? parseInt(picked.value, 10) : -1;
+        var opts = blocks[qi].querySelectorAll(".opt");
+        opts.forEach(function(optEl, oi){
+          if (oi === q.correct) optEl.classList.add("correct");
+          else if (oi === pickedVal) optEl.classList.add("wrong");
+        });
+        if (pickedVal === q.correct) correctCount++;
+      });
+
+      var score = correctCount / item.questions.length;
+      var pass = score >= item.pass;
+      result.hidden = false;
+      result.className = pass ? "pass" : "fail";
+      result.innerHTML = "<h3>" + (pass ? "Passed" : "Try again") + "</h3><p>" +
+        correctCount + " of " + item.questions.length + " correct.</p>";
+
+      submit.disabled = true;
+      form.querySelectorAll("input").forEach(function(inp){ inp.disabled = true; });
+
+      if (pass) markDone(item.id);
+
+      if (!pass){
+        var retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "btn-ghost";
+        retry.style.marginTop = "10px";
+        retry.textContent = "Retry quiz";
+        retry.addEventListener("click", function(){ renderDetail(); });
+        result.appendChild(retry);
+      }
+    });
+
+    $detailBody.appendChild(form);
+    $detailBody.appendChild(result);
+  }
+
+  // ---- gate logic ----
+  var lastEmail = safeGet("training_last_email");
+  if (lastEmail) $emailInput.value = lastEmail;
+
+  function attemptLogin(){
+    var val = $emailInput.value.trim();
+    if (!val || val.indexOf("@") === -1){
+      $gateError.textContent = "Enter a valid email address.";
+      return;
+    }
+    if (!isAllowed(val)){
+      $gateError.textContent = "That email isn't on the team list yet. Check with your manager.";
+      return;
+    }
+    $gateError.textContent = "";
+    state.email = val;
+    state.completed = loadCompleted(val);
+    safeSet("training_last_email", val);
+    state.view = "library";
+    render();
+  }
+
+  document.getElementById("gate-submit").addEventListener("click", attemptLogin);
+  $emailInput.addEventListener("keydown", function(e){ if (e.key === "Enter") attemptLogin(); });
+
+  document.getElementById("switch-user").addEventListener("click", function(){
+    safeRemove("training_last_email");
+    state.email = null;
+    state.completed = {};
+    $emailInput.value = "";
+    state.view = "gate";
+    render();
+  });
+
+  document.getElementById("detail-back").addEventListener("click", function(){
+    state.view = "library";
+    render();
+  });
+
+  // ---- self-managed roster (owner/editors only) ----
+  var adminCap = null;
+  var $adminPanel = document.getElementById("admin-panel");
+  var $rosterList = document.getElementById("roster-list");
+  var $adminStatus = document.getElementById("admin-status");
+  var $adminInput = document.getElementById("admin-email-input");
+  var $adminAddBtn = document.getElementById("admin-add-btn");
+
+  function buildFullDoc(overrides){
+    overrides = overrides || {};
+    var rosterJson = JSON.stringify(overrides.roster || DATA.roster, null, 6);
+    var groupsJson = JSON.stringify(overrides.groups || DATA.groups, null, 2);
+    var out = __ORIG_DOC__.replace(
+      /\/\*ROSTER_START\*\/[\s\S]*?\/\*ROSTER_END\*\//,
+      "/*ROSTER_START*/" + rosterJson + "/*ROSTER_END*/"
+    );
+    out = out.replace(
+      /\/\*GROUPS_START\*\/[\s\S]*?\/\*GROUPS_END\*\//,
+      "/*GROUPS_START*/" + groupsJson + "/*GROUPS_END*/"
+    );
+    return "<!doctype html>\n" + out;
+  }
+
+  function setAdminStatus(msg, isErr){
+    $adminStatus.textContent = msg || "";
+    $adminStatus.className = isErr ? "err" : "";
+  }
+
+  function setAdminBusy(busy){
+    $adminAddBtn.disabled = busy;
+    $adminInput.disabled = busy;
+    $rosterList.querySelectorAll("button").forEach(function(b){ b.disabled = busy; });
+  }
+
+  function renderRosterList(){
+    $rosterList.innerHTML = "";
+    DATA.roster.forEach(function(email){
+      var row = document.createElement("div");
+      row.className = "roster-row";
+      var span = document.createElement("span");
+      span.textContent = email;
+      var rm = document.createElement("button");
+      rm.type = "button";
+      rm.textContent = "Remove";
+      rm.addEventListener("click", function(){
+        var newRoster = DATA.roster.filter(function(r){ return r !== email; });
+        publishRoster(newRoster, "Removing " + email + "…");
+      });
+      row.appendChild(span);
+      row.appendChild(rm);
+      $rosterList.appendChild(row);
+    });
+  }
+
+  function publishRoster(newRoster, busyMsg){
+    if (!adminCap){
+      setAdminStatus("Publishing isn't available in this view.", true);
+      return;
+    }
+    setAdminBusy(true);
+    setAdminStatus(busyMsg, false);
+    adminCap.publish(buildFullDoc({ roster: newRoster })).then(function(){
+      setAdminStatus("Saved — reloading…", false);
+    }).catch(function(){
+      setAdminBusy(false);
+      setAdminStatus("Couldn't save that change. Try again in a moment.", true);
+    });
+  }
+
+  $adminAddBtn.addEventListener("click", function(){
+    var val = $adminInput.value.trim();
+    if (!val || val.indexOf("@") === -1){
+      setAdminStatus("Enter a valid email address.", true);
+      return;
+    }
+    var already = DATA.roster.some(function(r){ return r.toLowerCase() === val.toLowerCase(); });
+    if (already){
+      setAdminStatus("That email is already on the list.", true);
+      return;
+    }
+    var newRoster = DATA.roster.concat([val]);
+    $adminInput.value = "";
+    publishRoster(newRoster, "Adding " + val + "…");
+  });
+  $adminInput.addEventListener("keydown", function(e){ if (e.key === "Enter") $adminAddBtn.click(); });
+
+  // ---- self-managed content (owner/editors only) ----
+  var $contentPanel = document.getElementById("content-panel");
+  var $contentCategory = document.getElementById("content-category");
+  var $contentNewCategory = document.getElementById("content-new-category");
+  var $contentTitle = document.getElementById("content-title");
+  var $contentBody = document.getElementById("content-body");
+  var $contentAddBtn = document.getElementById("content-add-btn");
+  var $contentCancelBtn = document.getElementById("content-cancel-btn");
+  var $contentStatus = document.getElementById("content-status");
+  var $contentList = document.getElementById("content-list");
+  var editingItemId = null;
+
+  function slugify(s){
+    return s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "item";
+  }
+
+  function uniqueSlug(base, existingIds){
+    var s = base, n = 2;
+    while (existingIds.indexOf(s) !== -1){ s = base + "-" + n; n++; }
+    return s;
+  }
+
+  function setContentStatus(msg, isErr){
+    $contentStatus.textContent = msg || "";
+    $contentStatus.className = isErr ? "err" : "";
+  }
+
+  function setContentBusy(busy){
+    $contentAddBtn.disabled = busy;
+    $contentCancelBtn.disabled = busy;
+    $contentTitle.disabled = busy;
+    $contentBody.disabled = busy;
+    $contentCategory.disabled = busy;
+    $contentList.querySelectorAll("button").forEach(function(b){ b.disabled = busy; });
+  }
+
+  function renderCategoryOptions(){
+    $contentCategory.innerHTML = "";
+    DATA.groups.forEach(function(g){
+      var opt = document.createElement("option");
+      opt.value = g.id;
+      opt.textContent = g.name;
+      $contentCategory.appendChild(opt);
+    });
+    var newOpt = document.createElement("option");
+    newOpt.value = "__new__";
+    newOpt.textContent = "+ New category…";
+    $contentCategory.appendChild(newOpt);
+  }
+
+  $contentCategory.addEventListener("change", function(){
+    $contentNewCategory.hidden = $contentCategory.value !== "__new__";
+  });
+
+  function renderContentList(){
+    $contentList.innerHTML = "";
+    DATA.groups.forEach(function(group){
+      group.items.forEach(function(item){
+        var row = document.createElement("div");
+        row.className = "roster-row";
+        var span = document.createElement("span");
+        span.textContent = item.title + "  ·  " + group.name;
+
+        var actions = document.createElement("span");
+        actions.className = "roster-actions";
+
+        if (item.source){
+          var ed = document.createElement("button");
+          ed.type = "button";
+          ed.className = "edit-btn";
+          ed.textContent = "Edit";
+          ed.addEventListener("click", function(){ startEditItem(group, item); });
+          actions.appendChild(ed);
+        }
+
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.textContent = "Remove";
+        rm.addEventListener("click", function(){
+          var newGroups = DATA.groups
+            .map(function(g){
+              if (g.id !== group.id) return g;
+              return Object.assign({}, g, { items: g.items.filter(function(it){ return it.id !== item.id; }) });
+            })
+            .filter(function(g){ return g.items.length > 0; });
+          if (editingItemId === item.id) resetContentForm();
+          publishGroups(newGroups, "Removing “" + item.title + "”…");
+        });
+        actions.appendChild(rm);
+
+        row.appendChild(span);
+        row.appendChild(actions);
+        $contentList.appendChild(row);
+      });
+    });
+  }
+
+  function resetContentForm(){
+    editingItemId = null;
+    $contentTitle.value = "";
+    $contentBody.value = "";
+    $contentNewCategory.value = "";
+    $contentNewCategory.hidden = true;
+    $contentAddBtn.textContent = "Add to Library";
+    $contentCancelBtn.hidden = true;
+    setContentStatus("", false);
+  }
+
+  function startEditItem(group, item){
+    if (!item.source) return;
+    editingItemId = item.id;
+    $contentCategory.value = group.id;
+    $contentNewCategory.hidden = true;
+    $contentNewCategory.value = "";
+    $contentTitle.value = item.title;
+    $contentBody.value = item.source;
+    $contentAddBtn.textContent = "Save Changes";
+    $contentCancelBtn.hidden = false;
+    setContentStatus("Editing “" + item.title + "”", false);
+    $contentTitle.scrollIntoView({ behavior: "smooth", block: "center" });
+    $contentTitle.focus();
+  }
+
+  $contentCancelBtn.addEventListener("click", resetContentForm);
+
+  function publishGroups(newGroups, busyMsg){
+    if (!adminCap){
+      setContentStatus("Publishing isn't available in this view.", true);
+      return;
+    }
+    setContentBusy(true);
+    setContentStatus(busyMsg, false);
+    adminCap.publish(buildFullDoc({ groups: newGroups })).then(function(){
+      setContentStatus("Saved — reloading…", false);
+    }).catch(function(){
+      setContentBusy(false);
+      setContentStatus("Couldn't save that change. Try again in a moment.", true);
+    });
+  }
+
+  $contentAddBtn.addEventListener("click", function(){
+    var title = $contentTitle.value.trim();
+    var body = $contentBody.value.trim();
+    if (!title){ setContentStatus("Give it a title.", true); return; }
+    if (!body){ setContentStatus("Add some content.", true); return; }
+
+    var groupId = $contentCategory.value;
+    var newGroups = DATA.groups.map(function(g){ return Object.assign({}, g, { items: g.items.slice() }); });
+
+    // if editing, pull the item out of wherever it currently lives first
+    if (editingItemId){
+      newGroups = newGroups.map(function(g){
+        return Object.assign({}, g, { items: g.items.filter(function(it){ return it.id !== editingItemId; }) });
+      });
+    }
+
+    var targetGroup;
+    if (groupId === "__new__"){
+      var catName = $contentNewCategory.value.trim();
+      if (!catName){ setContentStatus("Name the new category.", true); return; }
+      var newId = uniqueSlug(slugify(catName), newGroups.map(function(g){ return g.id; }));
+      targetGroup = { id: newId, name: catName, items: [] };
+      newGroups.push(targetGroup);
+    } else {
+      targetGroup = newGroups.filter(function(g){ return g.id === groupId; })[0];
+      if (!targetGroup){ setContentStatus("Pick a category.", true); return; }
+    }
+
+    var wordCount = body.split(/\s+/).filter(Boolean).length;
+    var minutes = Math.max(1, Math.round(wordCount / 200));
+    var html = (window.marked && (window.marked.parse || window.marked))
+      ? (window.marked.parse ? window.marked.parse(body) : window.marked(body))
+      : "<p>" + body.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n\n+/g,"</p><p>").replace(/\n/g,"<br>") + "</p>";
+
+    var itemId, busyMsg;
+    if (editingItemId){
+      itemId = editingItemId;
+      busyMsg = "Saving “" + title + "”…";
+    } else {
+      var allItemIds = [];
+      DATA.groups.forEach(function(g){ g.items.forEach(function(it){ allItemIds.push(it.id); }); });
+      itemId = uniqueSlug(slugify(title), allItemIds);
+      busyMsg = "Adding “" + title + "”…";
+    }
+
+    targetGroup.items.push({ id: itemId, type: "doc", title: title, minutes: minutes, html: html, source: body });
+
+    // drop any category left empty after moving an item out of it
+    newGroups = newGroups.filter(function(g){ return g.items.length > 0 || g === targetGroup; });
+
+    publishGroups(newGroups, busyMsg);
+  });
+
+  function initAdmin(){
+    if (!(window.claude && window.claude.use)) return;
+    Promise.resolve(window.claude.use("user")).then(function(userNs){
+      var canEdit = !!(userNs && typeof userNs.canEdit === "function" && userNs.canEdit());
+      if (!canEdit) return null;
+      return window.claude.use("artifact");
+    }).then(function(cap){
+      if (!cap) return;
+      adminCap = cap;
+      $adminPanel.hidden = false;
+      $contentPanel.hidden = false;
+      renderRosterList();
+      renderCategoryOptions();
+      renderContentList();
+    }).catch(function(){ /* stay hidden for anyone this fails for */ });
+  }
+
+  render();
+  initAdmin();
+})();
+</script>
+
+</body>
+</html>
